@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical GitOps and DevSecOps baseline using linting, Trivy, Cosign, policy and Argo CD."><title>GitOps Security Baseline | Ashish Sadhuka</title><link rel="stylesheet" href="/styles.css"></head><body><div class="nav-shell"><div class="wrap"><nav><a class="brand" href="/"><span class="brand-mark">AS</span><span>Ashish Sadhuka</span></a><div class="nav-links"><a href="/blog/">Blog</a><a href="/resume.html">Resume</a></div></nav></div></div><article class="article"><a class="back" href="/blog/">← All articles</a><h1>A practical security baseline for GitOps delivery</h1><div class="article-meta">GitOps · DevSecOps · Supply Chain</div><p>A credible GitOps demo should show more than deployment automation. It should demonstrate that artifacts are validated before they reach the cluster and that the runtime still enforces policy.</p><h2>1. Validate source and manifests</h2><p>Run fast checks first: unit tests, linting, Helm rendering and Kubernetes schema validation. Fail early before building or publishing artifacts.</p><pre><code>helm lint ./charts/my-app
+helm template my-app ./charts/my-app &gt; rendered.yaml</code></pre><h2>2. Scan the image</h2><p>Use Trivy or another scanner after the image is built and before promotion.</p><pre><code>trivy image --severity HIGH,CRITICAL my-registry/my-app:1.4.0</code></pre><p>The useful part is not merely running a scanner. Define what severity or policy actually blocks promotion.</p><h2>3. Produce provenance and sign artifacts</h2><p>Signing makes the deployment chain stronger because the cluster or admission policy can verify that the artifact came from an approved workflow.</p><pre><code>cosign sign my-registry/my-app@sha256:...</code></pre><p>Prefer immutable digests for promotion instead of relying only on mutable tags such as <code>latest</code>.</p><h2>4. Keep deployment changes in Git</h2><p>Update the desired image digest or chart version in the GitOps repository and let Argo CD reconcile it. Avoid giving the CI pipeline broad direct cluster credentials when GitOps can be the deployment boundary.</p><h2>5. Enforce runtime policy</h2><p>Use admission controls such as OPA Gatekeeper or a platform-native policy engine for requirements like approved registries, resource limits, non-root execution and required labels.</p><div class="callout"><strong>Defense in depth:</strong> CI checks improve feedback. Admission policy protects the cluster even when a pipeline is bypassed or misconfigured.</div><h2>6. Make the flow observable</h2><p>Keep evidence: scan output, artifact digest, signature verification, Git commit and Argo CD sync state. During an incident, these links make it much easier to answer what changed and how it reached production.</p><h2>A compact pipeline</h2><pre><code>commit
+  ↓
+lint + test
+  ↓
+build image
+  ↓
+Trivy scan
+  ↓
+SBOM + Cosign signing
+  ↓
+publish immutable digest
+  ↓
+update GitOps repo
+  ↓
+Argo CD sync
+  ↓
+admission policy
+  ↓
+runtime observability</code></pre><p>This is enough to demonstrate real DevSecOps thinking without turning a portfolio project into an enterprise security product.</p></article><footer><div class="wrap">© <span data-year></span> Ashish Sadhuka</div></footer><script src="/site.js" defer></script></body></html>
