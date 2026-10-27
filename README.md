@@ -5,7 +5,7 @@ A lightweight personal engineering website for resume, technical writing, projec
 ## Site structure
 
 - `/` - portfolio homepage
-- `/resume.html` - original online resume, preserved unchanged
+- `/resume.html` - standalone online resume, updated with the current Centris AG role
 - `/blog/` - technical blog index
 - `/blog/openshift-503-troubleshooting.html`
 - `/blog/kubernetes-service-traffic.html`
@@ -54,4 +54,4 @@ No API keys are committed to this repository.
 
 ## Existing resume
 
-The original standalone resume remains available as `resume.html`, so the portfolio upgrade does not remove the previous design or print-to-PDF functionality.
+The standalone resume, updated with the current Platform Engineer role at Centris AG, remains available as `resume.html`, so the portfolio upgrade does not remove the previous design or print-to-PDF functionality.
