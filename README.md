@@ -1,51 +1,57 @@
-# Ashish Sadhuka — Online Resume
+# Ashish Sadhuka - Portfolio, Resume & Tech Blog
 
-A self-contained responsive online resume website.
+A lightweight personal engineering website for resume, technical writing, projects and recruiter contact.
 
-## Files
+## Site structure
 
-- `index.html` — complete website (HTML, CSS and JavaScript in one file)
+- `/` - portfolio homepage
+- `/resume.html` - standalone online resume, updated with the current Centris AG role
+- `/blog/` - technical blog index
+- `/blog/openshift-503-troubleshooting.html`
+- `/blog/kubernetes-service-traffic.html`
+- `/blog/gitops-security-baseline.html`
+- `/api/contact.js` - Vercel serverless contact-email endpoint
+- `/api/subscribe.js` - Vercel serverless newsletter subscription endpoint
 
 ## Run locally
 
-Open `index.html` directly in your browser, or run a simple local server:
+Static pages can be previewed with:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then open:
+The `/api/*` functions require a Vercel development/deployment environment.
+
+## Email configuration
+
+The site uses Resend through server-side Vercel functions. Configure these environment variables in Vercel Project Settings:
 
 ```text
-http://localhost:8080
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=Website <hello@your-domain.example>
+CONTACT_TO_EMAIL=ashish852004@gmail.com
+RESEND_AUDIENCE_ID=...
 ```
 
-## Deploy with GitHub Pages
+`RESEND_FROM_EMAIL` must use a sender/domain accepted by your Resend account.
 
-1. Create a GitHub repository, e.g. `online-resume`.
-2. Copy `index.html` into the repository root.
-3. Push the repository to GitHub.
-4. Open **Settings → Pages**.
-5. Under **Build and deployment**, choose **Deploy from a branch**.
-6. Select the `main` branch and `/ (root)`.
-7. Save.
+No API keys are committed to this repository.
 
-GitHub will publish the site at a GitHub Pages URL.
+## Publishing a new blog post
 
-## Customize
+1. Copy one of the HTML files under `blog/`.
+2. Update title, description, article content and metadata.
+3. Add a card for the post to `blog/index.html` and optionally the homepage.
+4. Commit and push. Vercel will deploy the updated site when Git integration is enabled.
 
-Search `index.html` for:
-- Contact details
-- Professional summary
-- Skills
-- Experience
-- Certifications
-- LinkedIn URL
+## Security basics
 
-The site includes:
-- Responsive mobile layout
-- Dark/light mode
-- Scroll animations
-- Print / Save PDF button
-- SEO description
-- No external framework or dependency
+- Contact and subscription APIs validate inputs server-side.
+- Both forms include a honeypot field for simple bot filtering.
+- Message content is HTML-escaped before being used in email markup.
+- Email credentials are environment variables, not frontend JavaScript.
+
+## Existing resume
+
+The standalone resume, updated with the current Platform Engineer role at Centris AG, remains available as `resume.html`, so the portfolio upgrade does not remove the previous design or print-to-PDF functionality.
